@@ -39,8 +39,28 @@
                 fh.inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        outputs = { nixpkgs, ... }: {
-                nixosConfigurations.milesobrien = nixpkgs.lib.nixosSystem {
+        outputs =
+            { self
+            , nix-formatter-pack
+            , nixpkgs
+            , ...
+            }@inputs:
+            let
+                inherit (self) outputs;
+                # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+                stateVersion = "24.05";
+                libx = import ./lib { inherit inputs outputs stateVersion; };
+            in
+            {
+                nixosConfigurations = {
+                    # Workstations
+                    #  - sudo nixos-rebuild boot --flake $HOME/Zero/nix-config
+                    #  - sudo nixos-rebuild switch --flake $HOME/Zero/nix-config
+                    #  - nix build .#nixosConfigurations.{hostname}.config.system.build.toplevel
+                    milesobrien  = libx.mkHost { hostname = "milesobrien";  username = "stunix"; desktop = "pantheon"; };
+                    picard   = libx.mkHost { hostname = "picard";   username = "stunix"; desktop = "pantheon"; };
+
+                milesobrien = nixpkgs.lib.nixosSystem {
                         system = "x86_64-linux";
                         modules = [ ./configuration.nix ];
                 };
