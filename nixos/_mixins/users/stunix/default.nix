@@ -71,6 +71,8 @@ in
       wavebox
       yaru-theme
       zoom-us
+      pkgs.tailscale
+      trayscale
     ] ++ lib.optionals (isWorkstation && (desktop == "gnome" || desktop == "pantheon")) [
       loupe
       marker

@@ -48,8 +48,8 @@ in
   environment.systemPackages = with pkgs; lib.optionals (isInstall) [
     appimage-run
     (chromium.override { enableWideVine = true; })
-    pavucontrol
-    pulseaudio
+    #pavucontrol
+    #pulseaudio
     wmctrl
     xdotool
     ydotool
@@ -127,7 +127,7 @@ in
       syncEffectsEnabled = true;
       users = [ "${username}" ];
     };
-    pulseaudio.enable = lib.mkForce false;
+    #pulseaudio.enable = lib.mkForce false;
     sane = lib.mkIf (isInstall) {
       enable = true;
       #extraBackends = with pkgs; [ hplipWithPlugin sane-airscan ];
@@ -435,7 +435,7 @@ in
       alsa.enable = true;
       alsa.support32Bit = isGamestation;
       jack.enable = false;
-      pulse.enable = true;
+      pulse.enable = false;
       wireplumber = {
         enable = true;
         # https://stackoverflow.com/questions/24040672/the-meaning-of-period-in-alsa
@@ -483,19 +483,19 @@ in
           };
         }];
       };
-      extraConfig.pipewire-pulse."92-low-latency" = lib.mkIf (needsLowLatencyPipewire) {
-        "pulse.properties" = {
-          "pulse.default.format" = "S16";
-          "pulse.fix.format" = "S16LE";
-          "pulse.fix.rate" = "48000";
-          "pulse.min.frag" = "64/48000";      # 1.3ms
-          "pulse.min.req" = "64/48000";       # 1.3ms
-          "pulse.default.frag" = "64/48000";  # 1.3ms
-          "pulse.default.req" = "64/48000";   # 1.3ms
-          "pulse.max.req" = "64/48000";       # 1.3ms
-          "pulse.min.quantum" = "64/48000";   # 1.3ms
-          "pulse.max.quantum" = "64/48000";   # 1.3ms
-        };
+      #extraConfig.pipewire-pulse."92-low-latency" = lib.mkIf (needsLowLatencyPipewire) {
+       # "pulse.properties" = {
+       #   "pulse.default.format" = "S16";
+        #  "pulse.fix.format" = "S16LE";
+        #  "pulse.fix.rate" = "48000";
+       #   "pulse.min.frag" = "64/48000";      # 1.3ms
+       #   "pulse.min.req" = "64/48000";       # 1.3ms
+       #   "pulse.default.frag" = "64/48000";  # 1.3ms
+       #   "pulse.default.req" = "64/48000";   # 1.3ms
+      #    "pulse.max.req" = "64/48000";       # 1.3ms
+       #   "pulse.min.quantum" = "64/48000";   # 1.3ms
+      #    "pulse.max.quantum" = "64/48000";   # 1.3ms
+     #   };
         "stream.properties" = {
           "node.latency" = "64/48000";        # 1.3ms
           "resample.quality" = 4;

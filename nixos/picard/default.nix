@@ -7,7 +7,8 @@
     #inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    inputs.nixos-hardware.nixosModules.microsoft-surface-common
+    #inputs.nixos-hardware.nixosModules.microsoft-surface-common
+    inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
     ];
 
   fileSystems."/" =
@@ -22,14 +23,13 @@
     };
 
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "surface_aggregator_hub" "surface_aggregator_registry" "8250_dw" "intel_lpss" "intel_lpss" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-intel" "hid-microsoft"];
   boot.extraModulePackages = [ ];
-
-
-
-
+  boot.kernelParams = [ "i915.enable_rc6=1" "i915.enable_psr=0" "systemd.unified_cgroup_hierarchy=0" ];
+  #boot.kernelPatches = [ "surface" "hibernate-progress" ];
+  sound.enable = true;
 
     services = {
       #udev.extraRules = ''
@@ -38,13 +38,22 @@
       #'';
        # Enable the X11 windowing system.
       xserver.enable = true;
+      iptsd.config.Touch.DisableOnPalm = true;
+      iptsd.config.Touch.DisableOnStylus = true;
+      iptsd.config.Touch.Overshoot = 0.5;
+      iptsd.config.Contacts.Neutral = "Average";
+      iptsd.config.Contacts.NeutralValue = 100;
+      autorandr.enable = true;
+      fwupd.enable = true;
+      #xserver.upscaleDefaultCursor = true;
+      usbmuxd = { enable = true; };
       #xserver.videoDrivers = [ "nvidia" ];
       #xserver.videoDrivers = [ "intel" ];
       # mount usb drives to /media
       #udisks2.enable = true;
       #udisks2.mountOnMedia = true;
   };
-
+  powerManagement.enable = true;
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
@@ -55,4 +64,5 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  #hardware.pulseaudio.enable = true;
 }
