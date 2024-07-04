@@ -127,7 +127,7 @@ in
       syncEffectsEnabled = true;
       users = [ "${username}" ];
     };
-    #pulseaudio.enable = lib.mkForce false;
+    pulseaudio.enable = lib.mkForce false;
     sane = lib.mkIf (isInstall) {
       enable = true;
       #extraBackends = with pkgs; [ hplipWithPlugin sane-airscan ];
@@ -208,7 +208,7 @@ in
         "PasswordManagerEnabled" = false;
         "PasswordSharingEnabled" = false;
         # Printing
-        "PrintingPaperSizeDefault" = "iso_a4_210x297mm";
+        #"PrintingPaperSizeDefault" = "iso_a4_210x297mm";
         # Related Website Sets
         "RelatedWebsiteSetsEnabled" = false;
         # Safe Browsing
@@ -496,80 +496,59 @@ in
        #   "pulse.min.quantum" = "64/48000";   # 1.3ms
       #    "pulse.max.quantum" = "64/48000";   # 1.3ms
      #   };
-        "stream.properties" = {
-          "node.latency" = "64/48000";        # 1.3ms
-          "resample.quality" = 4;
-          "resample.disable" = false;
-        };
+      #  "stream.properties" = {
+       #   "node.latency" = "64/48000";        # 1.3ms
+        #  "resample.quality" = 4;
+         # "resample.disable" = false;
+        #};
       };
     };
-    printing = lib.mkIf (isInstall) {
-      enable = true;
-      drivers = with pkgs; [ gutenprint hplip ];
-    };
-    system-config-printer.enable = isInstall;
+    #printing = lib.mkIf (isInstall) {
+     # enable = true;
+     # drivers = with pkgs; [ gutenprint hplip ];
+    #};
+   # system-config-printer.enable = isInstall;
 
     # Provides users with access to all Elgato StreamDecks.
     # https://github.com/muesli/deckmaster
     # https://gitlab.gnome.org/World/boatswain/-/blob/main/README.md#udev-rules
-    udev.extraRules = ''
+#    udev.extraRules = ''
       # Deckmaster needs write access to uinput to simulate keypresses.
       # Users wanting to use Deckmaster should be added to the input group.
-      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="input", MODE="0660"
+#      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="input", MODE="0660"
 
       # Elgato Stream Deck Mini
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", TAG+="uaccess", SYMLINK+="streamdeck-mini"
+#      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", TAG+="uaccess", SYMLINK+="streamdeck-mini"
 
       # Elgato Stream Deck Mini (v2)
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0090", TAG+="uaccess", SYMLINK+="streamdeck-mini"
+ #     SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0090", TAG+="uaccess", SYMLINK+="streamdeck-mini"
 
       # Elgato Stream Deck Original
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", TAG+="uaccess", SYMLINK+="streamdeck"
+  #    SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", TAG+="uaccess", SYMLINK+="streamdeck"
 
       # Elgato Stream Deck Original (v2)
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006d", TAG+="uaccess", SYMLINK+="streamdeck"
+   #   SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006d", TAG+="uaccess", SYMLINK+="streamdeck"
 
       # Elgato Stream Deck MK.2
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", TAG+="uaccess", SYMLINK+="streamdeck"
+    #  SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", TAG+="uaccess", SYMLINK+="streamdeck"
 
       # Elgato Stream Deck XL
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006c", TAG+="uaccess", SYMLINK+="streamdeck-xl"
+     # SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006c", TAG+="uaccess", SYMLINK+="streamdeck-xl"
 
       # Elgato Stream Deck XL (v2)
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="008f", TAG+="uaccess", SYMLINK+="streamdeck-xl"
+   #   SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="008f", TAG+="uaccess", SYMLINK+="streamdeck-xl"
 
       # Elgato Stream Deck Pedal
-      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", TAG+="uaccess", SYMLINK+="streamdeck-pedal"
+    #  SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", TAG+="uaccess", SYMLINK+="streamdeck-pedal"
 
       # Expose important timers the members of the audio group
       # Inspired by musnix: https://github.com/musnix/musnix/blob/master/modules/base.nix#L94
-      KERNEL=="rtc0", GROUP="audio"
-      KERNEL=="hpet", GROUP="audio"
+   #   KERNEL=="rtc0", GROUP="audio"
+   #   KERNEL=="hpet", GROUP="audio"
       # Allow users in the audio group to change cpu dma latency
-      DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
-    '';
+   #   DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
+   # '';
 
-    # Disable xterm
-    xserver = {
-      desktopManager.xterm.enable = false;
-      # Disable autoSuspend; my Pantheon session kept auto-suspending
-      # - https://discourse.nixos.org/t/why-is-my-new-nixos-install-suspending/19500
-      displayManager.gdm.autoSuspend = if (desktop == "pantheon") then true else false;
-      excludePackages = [ pkgs.xterm ];
-    };
-  };
-
-  security = {
-    # Allow members of the "audio" group to set RT priorities
-    # Inspired by musnix: https://github.com/musnix/musnix/blob/master/modules/base.nix#L87
-    pam.loginLimits = [
-      { domain = "@audio"; item = "memlock"; type = "-"   ; value = "unlimited"; }
-      { domain = "@audio"; item = "rtprio" ; type = "-"   ; value = "99"       ; }
-      { domain = "@audio"; item = "nofile" ; type = "soft"; value = "99999"    ; }
-      { domain = "@audio"; item = "nofile" ; type = "hard"; value = "99999"    ; }
-    ];
-    rtkit.enable = true;
-  };
 
   systemd.services = {
     configure-flathub-repo = lib.mkIf (isInstall) {

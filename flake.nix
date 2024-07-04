@@ -60,6 +60,7 @@
                     #  - nix build .#nixosConfigurations.{hostname}.config.system.build.toplevel
                     milesobrien  = libx.mkHost { hostname = "milesobrien";  username = "stunix"; desktop = "pantheon"; };
                     picard   = libx.mkHost { hostname = "picard";   username = "stunix"; desktop = "pantheon"; };
+                    laforge  = libx.mkHost { hostname = "laforge";  username = "stunix"; desktop = "pantheon"; };
 
                 };
             };

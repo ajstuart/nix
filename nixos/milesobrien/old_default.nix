@@ -7,21 +7,22 @@
     inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    ../_mixins/services/tailscale
     ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/700cdc4a-b3f3-4506-a2f0-607df99885c3";
+    { device = "/dev/disk/by-uuid/0a1d56af-182c-45db-a63a-a02f4b796cac";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/F1E0-2BD9";
+    { device = "/dev/disk/by-uuid/E72D-232D";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
-  swapDevices = [ ];
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/b50c965a-504b-40da-a6b4-b70f11c981c2"; }
+    ];
 
 
   boot = {
@@ -65,7 +66,7 @@
     hardware.opengl = {
     enable = true;
     driSupport = true;
-    #driSupport32Bit = true;
+    druSupport32Bit = true;
     extraPackages = with pkgs; [
       #intel-media-driver
       #intel-vaapi-driver

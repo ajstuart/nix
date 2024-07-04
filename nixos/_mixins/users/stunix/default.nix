@@ -1,7 +1,7 @@
 { config, desktop, hostname, inputs, lib, pkgs, platform, username, ... }:
 let
   isWorkstation = if (desktop != null) then true else false;
-  isStreamstation = if (hostname == "phasma" || hostname == "vader") && (isWorkstation) then true else false;
+  isStreamstation = if (hostname == "laforge" || hostname == "vader") && (isWorkstation) then true else false;
 in
 {
   boot = lib.mkIf (isStreamstation) {
