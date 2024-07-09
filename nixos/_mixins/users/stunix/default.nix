@@ -58,7 +58,7 @@ in
       google-chrome
       halloy
       inkscape
-      libreoffice
+      libreofficeterm  
       meld
       microsoft-edge
       opera
