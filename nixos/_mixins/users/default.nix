@@ -17,6 +17,8 @@ in
       "users"
       "video"
       "wheel"
+      "jellyfin"
+      "audiobookshelf"
     ]
     ++ ifExists [
       #"docker"

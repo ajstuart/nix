@@ -8,6 +8,9 @@
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     ../_mixins/services/tailscale
+    ../_mixins/services/jellyfin
+    ../_mixins/services/audiobookshelf
+ 
     ];
 
   fileSystems."/" =

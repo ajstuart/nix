@@ -60,17 +60,17 @@ in
       inkscape
       libreofficeterm  
       meld
-      microsoft-edge
-      opera
-      pika-backup
-      tartube
-      tenacity
+      #microsoft-edge
+      #opera
+      #pika-backup
+      #tartube
+      #tenacity
       usbimager
       vivaldi
       vivaldi-ffmpeg-codecs
-      wavebox
-      yaru-theme
-      zoom-us
+      #wavebox
+      #yaru-theme
+      #zoom-us
       pkgs.tailscale
       trayscale
     ] ++ lib.optionals (isWorkstation && (desktop == "gnome" || desktop == "pantheon")) [
@@ -95,15 +95,15 @@ in
   programs = {
     chromium = lib.mkIf (isWorkstation) {
       extensions = [
-        "hdokiejnpimakedhajhdlcegeplioahd" # LastPass
-        "kbfnbcaeplbcioakkpcpgfkobkghlhen" # Grammarly
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-        "mdjildafknihdffpkfmmpnpoiajfjnjd" # Consent-O-Matic
-        "mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
-        "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-        "fdpohaocaechififmbbbbbknoalclacl" # GoFullPage
+        #"hdokiejnpimakedhajhdlcegeplioahd" # LastPass
+        #"kbfnbcaeplbcioakkpcpgfkobkghlhen" # Grammarly
+        #"cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+        #"mdjildafknihdffpkfmmpnpoiajfjnjd" # Consent-O-Matic
+        #"mnjggcdmjocbbbhaepdhchncahnbgone" # SponsorBlock for YouTube
+        #"gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
+        #"fdpohaocaechififmbbbbbknoalclacl" # GoFullPage
         "clpapnmmlmecieknddelobgikompchkk" # Disable Automatic Gain Control
-        "cdglnehniifkbagbbombnjghhcihifij" # Kagi
+        #"cdglnehniifkbagbbombnjghhcihifij" # Kagi
       ];
     };
     dconf.profiles.user.databases = [{
