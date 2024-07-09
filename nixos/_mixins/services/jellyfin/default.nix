@@ -3,7 +3,6 @@
   services = {
     jellyfin = {
       enable = true;
-      #dataDir = "/srv/state/jellyfin";
       openFirewall = true;
     };
   };
