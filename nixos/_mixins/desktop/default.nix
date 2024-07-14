@@ -127,7 +127,7 @@ in
       syncEffectsEnabled = true;
       users = [ "${username}" ];
     };
-    pulseaudio.enable = lib.mkForce true;
+    pulseaudio.enable = lib.mkForce false;
     sane = lib.mkIf (isInstall) {
       enable = true;
       #extraBackends = with pkgs; [ hplipWithPlugin sane-airscan ];
