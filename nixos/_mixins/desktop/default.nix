@@ -437,7 +437,7 @@ in
       jack.enable = false;
       pulse.enable = false;
       wireplumber = {
-        enable = true;
+        enable = false;
         # https://stackoverflow.com/questions/24040672/the-meaning-of-period-in-alsa
         # https://pipewire.pages.freedesktop.org/wireplumber/daemon/configuration/alsa.html#alsa-buffer-properties
         # cat /nix/store/*-wireplumber-*/share/wireplumber/main.lua.d/99-alsa-lowlatency.lua
