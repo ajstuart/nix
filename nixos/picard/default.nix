@@ -5,10 +5,13 @@
     #inputs.nixos-hardware.nixosModules.common-cpu-amd
     #inputs.nixos-hardware.nixosModules.common-gpu-amd
     #inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-    inputs.nixos-hardware.nixosModules.common-pc
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
+    #inputs.nixos-hardware.nixosModules.common-pc
+    #inputs.nixos-hardware.nixosModules.common-pc-ssd
     #inputs.nixos-hardware.nixosModules.microsoft-surface-common
     inputs.nixos-hardware.nixosModules.microsoft-surface-pro-intel
+    inputs.hardware.nixosModules.common-cpu-intel
+    inputs.hardware.nixosModules.common-pc-laptop
+    inputs.hardware.nixosModules.common-pc-ssd
     ];
 
   fileSystems."/" =
@@ -23,7 +26,19 @@
     };
 
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "surface_aggregator_hub" "surface_aggregator_registry" "8250_dw" "intel_lpss" "intel_lpss" ];
+  boot.initrd.availableKernelModules = [ 
+    "xhci_pci"
+    "nvme"
+    "usb_storage"
+    "sd_mod"
+    "surface_aggregator_hub"
+    "surface_aggregator_registry"
+    "8250_dw" 
+    "intel_lpss" 
+    "intel_lpss_pci"
+    "surface_hid_core"
+    "surface_hid"
+  ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" "hid-microsoft"];
   boot.extraModulePackages = [ ];
