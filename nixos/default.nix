@@ -26,7 +26,7 @@ in
     kernelParams = [
       "boot.shell_on_fail"
       "loglevel=3"
-      "rd.systemd.show_status=false"
+      #"rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
     ];
@@ -70,11 +70,11 @@ in
   time.timeZone = "America/New_York";
 
   # Only install the docs I use
-  documentation.enable = true;
-  documentation.nixos.enable = false;
-  documentation.man.enable = true;
-  documentation.info.enable = false;
-  documentation.doc.enable = false;
+  #documentation.enable = true;
+  #documentation.nixos.enable = false;
+  #documentation.man.enable = true;
+  #documentation.info.enable = false;
+  #documentation.doc.enable = false;
 
   environment = {
     # Eject nano and perl from the system
@@ -91,8 +91,8 @@ in
       inputs.nixos-needtoreboot.packages.${platform}.default
       clinfo
       distrobox
-      flyctl
-      fuse-overlayfs
+      #flyctl
+      #fuse-overlayfs
       libva-utils
       nvd
       nvme-cli
@@ -104,7 +104,7 @@ in
       #sops
       ssh-to-age
     ] ++ lib.optionals (isInstall && isWorkstation) [
-      pods
+      #pods
     ] ++ lib.optionals (isInstall && isWorkstation && notVM) [
       quickemu
     ] ++ lib.optionals (isInstall && hasNvidia) [

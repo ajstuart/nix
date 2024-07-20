@@ -43,31 +43,31 @@ in
     ];
 
     systemPackages = (with pkgs; [
-      _1password
-      lastpass-cli
+      #_1password
+      #lastpass-cli
     ] ++ lib.optionals (isWorkstation) [
-      _1password-gui
+      #_1password-gui
       brave
       chromium
-      celluloid
+      #celluloid
       element-desktop
-      fractal
+      #fractal
       gimp-with-plugins
       gnome.dconf-editor
       gnome.gnome-sound-recorder
       google-chrome
-      halloy
+      #halloy
       inkscape
       #libreofficeterm  
-      meld
+      #meld
       #microsoft-edge
       #opera
       #pika-backup
       #tartube
       #tenacity
-      usbimager
-      vivaldi
-      vivaldi-ffmpeg-codecs
+      #usbimager
+      #vivaldi
+      #vivaldi-ffmpeg-codecs
       #wavebox
       #yaru-theme
       #zoom-us
