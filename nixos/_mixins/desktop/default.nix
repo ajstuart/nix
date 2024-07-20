@@ -419,170 +419,21 @@ in
   };
 
   services = {
-    flatpak = lib.mkIf (isInstall) {
-      enable = true;
-    };
-    # https://nixos.wiki/wiki/PipeWire
-    # https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Config-PipeWire#quantum-ranges
-    # Debugging
-    #  - pw-top                                            # see live stats
-    #  - journalctl -b0 --user -u pipewire                 # see logs (spa resync is "bad")
-    #  - pw-metadata -n settings 0                         # see current quantums
-    #  - pw-metadata -n settings 0 clock.force-quantum 128 # override quantum
-    #  - pw-metadata -n settings 0 clock.force-quantum 0   # disable override
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = isGamestation;
-      jack.enable = false;
-      pulse.enable = false;
-      wireplumber = {
-        enable = false;
-        # https://stackoverflow.com/questions/24040672/the-meaning-of-period-in-alsa
-        # https://pipewire.pages.freedesktop.org/wireplumber/daemon/configuration/alsa.html#alsa-buffer-properties
-        # cat /nix/store/*-wireplumber-*/share/wireplumber/main.lua.d/99-alsa-lowlatency.lua
-        # cat /nix/store/*-wireplumber-*/share/wireplumber/wireplumber.conf.d/99-alsa-lowlatency.conf
-        configPackages = lib.mkIf (needsLowLatencyPipewire) [
-          (pkgs.writeTextDir "share/wireplumber/main.lua.d/99-alsa-lowlatency.lua" ''
-              alsa_monitor.rules = {
-                {
-                  matches = {{{ "node.name", "matches", "*_*put.*" }}};
-                  apply_properties = {
-                    ["audio.format"] = "S16LE",
-                    ["audio.rate"] = 48000,
-                    -- api.alsa.headroom: defaults to 0
-                    ["api.alsa.headroom"] = 128,
-                    -- api.alsa.period-num: defaults to 2
-                    ["api.alsa.period-num"] = 2,
-                    -- api.alsa.period-size: defaults to 1024, tweak by trial-and-error
-                    ["api.alsa.period-size"] = 512,
-                    -- api.alsa.disable-batch: USB audio interface typically use the batch mode
-                    ["api.alsa.disable-batch"] = false,
-                    ["resample.quality"] = 4,
-                    ["resample.disable"] = false,
-                    ["session.suspend-timeout-seconds"] = 0,
-                  },
-                },
-              }
-            '')
-        ];
-      };
-      # https://gitlab.freedesktop.org/pipewire/pipewire/-/wikis/Config-PipeWire#quantum-ranges
-      extraConfig.pipewire."92-low-latency" = lib.mkIf (needsLowLatencyPipewire) {
-        "context.properties" = {
-          "default.clock.rate"          = 48000;
-          "default.clock.quantum"       = 64;
-          "default.clock.min-quantum"   = 64;
-          "default.clock.max-quantum"   = 64;
-        };
-        "context.modules" = [{
-          name = "libpipewire-module-rt";
-          args = {
-            "nice.level" = -11;
-            "rt.prio" = 88;
-          };
-        }];
-      };
-      #extraConfig.pipewire-pulse."92-low-latency" = lib.mkIf (needsLowLatencyPipewire) {
-       # "pulse.properties" = {
-       #   "pulse.default.format" = "S16";
-        #  "pulse.fix.format" = "S16LE";
-        #  "pulse.fix.rate" = "48000";
-       #   "pulse.min.frag" = "64/48000";      # 1.3ms
-       #   "pulse.min.req" = "64/48000";       # 1.3ms
-       #   "pulse.default.frag" = "64/48000";  # 1.3ms
-       #   "pulse.default.req" = "64/48000";   # 1.3ms
-      #    "pulse.max.req" = "64/48000";       # 1.3ms
-       #   "pulse.min.quantum" = "64/48000";   # 1.3ms
-      #    "pulse.max.quantum" = "64/48000";   # 1.3ms
-     #   };
-      #  "stream.properties" = {
-       #   "node.latency" = "64/48000";        # 1.3ms
-        #  "resample.quality" = 4;
-         # "resample.disable" = false;
-        #};
-      };
-    };
-    #printing = lib.mkIf (isInstall) {
-     # enable = true;
-     # drivers = with pkgs; [ gutenprint hplip ];
-    #};
-   # system-config-printer.enable = isInstall;
-
-    # Provides users with access to all Elgato StreamDecks.
-    # https://github.com/muesli/deckmaster
-    # https://gitlab.gnome.org/World/boatswain/-/blob/main/README.md#udev-rules
-#    udev.extraRules = ''
-      # Deckmaster needs write access to uinput to simulate keypresses.
-      # Users wanting to use Deckmaster should be added to the input group.
-#      KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", GROUP="input", MODE="0660"
-
-      # Elgato Stream Deck Mini
-#      SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", TAG+="uaccess", SYMLINK+="streamdeck-mini"
-
-      # Elgato Stream Deck Mini (v2)
- #     SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0090", TAG+="uaccess", SYMLINK+="streamdeck-mini"
-
-      # Elgato Stream Deck Original
-  #    SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", TAG+="uaccess", SYMLINK+="streamdeck"
-
-      # Elgato Stream Deck Original (v2)
-   #   SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006d", TAG+="uaccess", SYMLINK+="streamdeck"
-
-      # Elgato Stream Deck MK.2
-    #  SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", TAG+="uaccess", SYMLINK+="streamdeck"
-
-      # Elgato Stream Deck XL
-     # SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006c", TAG+="uaccess", SYMLINK+="streamdeck-xl"
-
-      # Elgato Stream Deck XL (v2)
-   #   SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="008f", TAG+="uaccess", SYMLINK+="streamdeck-xl"
-
-      # Elgato Stream Deck Pedal
-    #  SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", TAG+="uaccess", SYMLINK+="streamdeck-pedal"
-
-      # Expose important timers the members of the audio group
-      # Inspired by musnix: https://github.com/musnix/musnix/blob/master/modules/base.nix#L94
-   #   KERNEL=="rtc0", GROUP="audio"
-   #   KERNEL=="hpet", GROUP="audio"
-      # Allow users in the audio group to change cpu dma latency
-   #   DEVPATH=="/devices/virtual/misc/cpu_dma_latency", OWNER="root", GROUP="audio", MODE="0660"
-   # '';
-
-
-  systemd.services = {
-    configure-flathub-repo = lib.mkIf (isInstall) {
-      wantedBy = ["multi-user.target"];
-      path = [ pkgs.flatpak ];
-      script = ''
-        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-      '';
-    };
-    configure-appcenter-repo = lib.mkIf (isInstall && desktop == "pantheon") {
-      wantedBy = ["multi-user.target"];
-      path = [ pkgs.flatpak ];
-      script = ''
-        flatpak remote-add --if-not-exists appcenter https://flatpak.elementary.io/repo.flatpakrepo
-      '';
-    };
-    disable-wifi-powersave = lib.mkIf (!saveBattery) {
-      wantedBy = ["multi-user.target"];
-      path = [ pkgs.iw ];
-      script = ''
-        iw dev wlan0 set power_save off
-      '';
-    };
-  };
-
-  xdg.portal = {
-    config = {
-      common = {
-        default = [
-          "gtk"
-        ];
-      };
-    };
+     # Enable sound with pipewire.
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
     enable = true;
-    xdgOpenUsePortal = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    jack.enable = true;
+    wireplumber.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
   };
-}
+  }
