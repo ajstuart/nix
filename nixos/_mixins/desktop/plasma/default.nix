@@ -10,7 +10,7 @@ in
   services.displayManager.sddm.wayland.enable = true;
 
   # Enable the KDE Plasma  Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  #services.displayManager.sddm.enable = true;
   services.displayManager.sddm.wayland.enable = false;
   # Plasma 5 stuff for 23.11 nixos.  Updated 6/1/24
   programs.dconf.enable = true;
