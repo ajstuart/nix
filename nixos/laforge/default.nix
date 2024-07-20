@@ -88,7 +88,7 @@
       '';
        # Enable the X11 windowing system.
       xserver.enable = true;
-      xserver.videoDrivers = [ "nvidia" ];
+      #xserver.videoDrivers = [ "nvidia" ];
       #xserver.videoDrivers = [ "intel" ];
       # mount usb drives to /media
       udisks2.enable = true;
