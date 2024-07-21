@@ -8,6 +8,8 @@
                 # See 'unstable-packages' overlay in 'overlays/default.nix'.
                 nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+                catppuccin.url = "github:catppuccin/nix";
+
                 #disko.url = "github:nix-community/disko";
                 #disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -31,6 +33,14 @@
                 # FlakeHub
                 #antsy-alien-attack-pico.url = "https://flakehub.com/f/wimpysworld/antsy-alien-attack-pico/*.tar.gz";
                 #antsy-alien-attack-pico.inputs.nixpkgs.follows = "nixpkgs";
+                
+                # Flakehub
+                nix-flatpak.url = "https://flakehub.com/f/gmodena/nix-flatpak/*.tar.gz";
+                
+                quickemu.url = "https://flakehub.com/f/quickemu-project/quickemu/*.tar.gz";
+                quickemu.inputs.nixpkgs.follows = "nixpkgs";
+                quickgui.url = "https://flakehub.com/f/quickemu-project/quickgui/*.tar.gz";
+                quickgui.inputs.nixpkgs.follows = "nixpkgs";
 
                 #nix-snapd.url = "https://flakehub.com/f/io12/nix-snapd/0.1.*.tar.gz";
                 #nix-snapd.inputs.nixpkgs.follows = "nixpkgs";
@@ -41,9 +51,7 @@
 
         outputs =
             { self
-            , nix-formatter-pack
             , nixpkgs
-            , nixos-hardware
             , ...
             }@inputs:
             let
@@ -58,10 +66,20 @@
                     #  - sudo nixos-rebuild boot --flake $HOME/Zero/nix-config
                     #  - sudo nixos-rebuild switch --flake $HOME/Zero/nix-config
                     #  - nix build .#nixosConfigurations.{hostname}.config.system.build.toplevel
-                    milesobrien  = libx.mkHost { hostname = "milesobrien";  username = "stunix"; desktop = "pantheon"; };
-                    picard   = libx.mkHost { hostname = "picard";   username = "stunix"; desktop = "pantheon"; };
-                    laforge  = libx.mkHost { hostname = "laforge";  username = "stunix"; desktop = "plasma"; };
+                    milesobrien  = helper.mkHost { 
+                        hostname = "milesobrien";
+                        desktop = "plasma";
+                    };
 
+                    picard   = helper.mkHost { 
+                        hostname = "picard";
+                        desktop = "pantheon";
+                    };
+
+                    laforge  = helper.mkHost {
+                        hostname = "laforge";
+                        desktop = "plasma";
+                    };
                 };
             };
 }

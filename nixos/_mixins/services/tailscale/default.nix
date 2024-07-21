@@ -1,21 +1,29 @@
-{ config, desktop, hostname, lib, pkgs, username, ... }:
-let
-  isWorkstation = if (desktop != null) then true else false;
-in
 {
-  imports = lib.optional (builtins.pathExists (./. + "/${hostname}.nix")) ./${hostname}.nix;
-  environment = lib.mkIf (isWorkstation) {
-    systemPackages = with pkgs; [
-      trayscale
-    ];
-  };
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  config, 
+  hostname, 
+  isWorkstation,
+  lib,
+  pkgs,
+  username, 
+  ...
+}:
+let
+  installOn = [
+    "milesobrien"
+    "picard"
+    "laforge"
+  ];
+in
+lib.mkIf (lib.eleme "${hostname}" installOn) {
+environment.systemPackages = with pkgs; lib.optionals isWorkstation [ trayscale ];
+  
   services.tailscale = {
     enable = true;
-    extraUpFlags = [ "--accept-routes" "--operator=${username}" "--ssh" ];
-    # Enable caddy to acquire certificates from the tailscale daemon
-    # - https://tailscale.com/blog/caddy
-    #permitCertUid = "caddy";
+    extraUpFlags = [ 
+      "--accept-routes"
+      "--operator=${username}"
+      "--ssh" 
+    ] ++ lib.optional (lib.elem "${hostname}" tsExitNodes) "--advertise-exit-node";
     openFirewall = true;
     #useRoutingFeatures = "both";
   };

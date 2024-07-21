@@ -10,19 +10,46 @@
   #};
 
   # Helper function for generating host configs
-  mkHost = { hostname, username, desktop ? null, platform ? "x86_64-linux" }: inputs.nixpkgs.lib.nixosSystem {
-    specialArgs = {
-      inherit inputs outputs desktop hostname platform username stateVersion;
-    };
-    # If the hostname starts with "iso-", generate an ISO image
-    modules = let
-      isISO = if (builtins.substring 0 4 hostname == "iso-") then true else false;
-      cd-dvd = if (desktop == null) then inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix" else inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix";
+  mkHost = 
+    { 
+      hostname,
+      username ? "stunix"
+      desktop ? null, 
+      platform ? "x86_64-linux"
+    }:
+    let
+      isISO = builtins.substring 0 4 hostname == "iso-";
+      isInstall = !isISO;
+      isLima = builtins.substring 0 5 hostname == "lima-";
+      isWorkstation = builtins.isString desktop;
     in
-    [
-      ../nixos
-    ] ++ (inputs.nixpkgs.lib.optionals (isISO) [ cd-dvd ]);
-  };
+    inputs.nixpkgs.lib.nixosSystem {
+      specialArgs = {
+        inherit
+          inputs
+          outputs
+          desktop
+          hostname
+          platform
+          username
+          stateVersion
+          isInstall
+          isLima
+          isISO
+          isWorkstation
+          ;
+      };
+      # If the hostname starts with "iso-", generate an ISO image
+      modules =
+        let
+          cd-dvd =
+            if (desktop == null) then
+              inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            else
+              inputs.nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix";
+        in
+        [ ../nixos ] ++ inputs.nixpkgs.lib.optionals isISO [ cd-dvd ];
+    };
 
   forAllSystems = inputs.nixpkgs.lib.genAttrs [
     "aarch64-linux"

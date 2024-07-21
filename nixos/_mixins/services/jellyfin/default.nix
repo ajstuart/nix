@@ -1,5 +1,8 @@
-{ config, hostname, lib, pkgs, ... }: {
-  imports = lib.optional (builtins.pathExists (./. + "/${hostname}.nix")) ./${hostname}.nix;
+{ config, lib, ... }:
+let
+  installOn = [ "milesobrien" ];
+in
+lib.mkIf (lib.elem config.networking.hostName installOn) {
   services = {
     jellyfin = {
       enable = true;
