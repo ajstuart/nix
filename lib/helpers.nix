@@ -13,9 +13,9 @@
   mkHost = 
     { 
       hostname,
-      username ? "stunix"
+      username ? "stunix",
       desktop ? null, 
-      platform ? "x86_64-linux"
+      platform ? "x86_64-linux",
     }:
     let
       isISO = builtins.substring 0 4 hostname == "iso-";
