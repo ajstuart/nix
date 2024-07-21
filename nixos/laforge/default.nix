@@ -1,16 +1,17 @@
-{ config, inputs, lib, pkgs, platform, ... }:
-
+{ 
+  inputs,
+  pkgs,
+  username,
+  ...
+}:
 {
   imports = [
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
     #inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-    ../_mixins/services/tailscale
-
-
-    ];
+  ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/0a1d56af-182c-45db-a63a-a02f4b796cac";
