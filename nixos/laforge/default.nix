@@ -1,4 +1,5 @@
 { 
+  config,
   inputs,
   pkgs,
   username,
@@ -42,7 +43,7 @@
     #initrd.kernelModules = [ "nvidia" ];
     kernelPackages = lib.mkForce pkgs.linuxPackages_6_9;
     # This seems to nee to be here??  Will test further 6/6/24 - AJS
-    extraModulePackages = [ kernelPackages.nvidia_x11 ];
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
   };
 
   hardware = {
